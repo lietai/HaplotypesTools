@@ -1,0 +1,16 @@
+Package: HapToolkit
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Author: Who wrote it
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: CC BY 4.0
+Encoding: UTF-8
+LazyData: true
+Imports: data.table (>= 1.14.8), tools (>= 3.6.2), ggplot2 (>= 3.4.2), igraph, data.tree (>= 1.0.0)
+Suggests: 
+    testthat (>= 3.0.0), plotly
+Config/testthat/edition: 3
+RoxygenNote: 7.2.3
