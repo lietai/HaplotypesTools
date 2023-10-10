@@ -53,7 +53,14 @@ ReadPhasedVCF<-function(filename,famfile="",chr=0,start=0,end=0){
   VCF<-data.table::fread(filename)
   if(chr!=0 && start!=0 && end!=0){
     VCF<-VCF[`#CHROM`==chr][POS>=start][POS<=end]
+    VCF<-unique(VCF)
   }
+  if(length(unique(unlist(VCF[,"ID"])))==1){
+  	SNPS=paste(unlist(VCF[,"#CHROM"]),unlist(VCF[,"POS"]),collapse="_")
+  }else{
+  	SNPS=unlist(VCF[,"ID"])
+  }
+
   if(verbose){ cat("data table done\n") }
   SAMPLES<-colnames(VCF)
   SAMPLES<-SAMPLES[-1:-9]
@@ -90,7 +97,7 @@ ReadPhasedVCF<-function(filename,famfile="",chr=0,start=0,end=0){
   TH_VCF<-t(H_VCF)
   colnames(TH_VCF)<-TH_VCF["ID",]
   TH_VCF<-TH_VCF[-1:-9,]
-  INFOS<-data.frame(ID=unlist(VCF$ID))
+  INFOS<-data.frame(ID=SNPS,POS=VCF[,"POS"])
   rownames(INFOS)<-INFOS$ID
   con=file(filename,open="r")
   while (length(linn <- readLines(con, n = 1, warn = FALSE)) > 0) {
@@ -108,7 +115,7 @@ ReadPhasedVCF<-function(filename,famfile="",chr=0,start=0,end=0){
   if(verbose){ cat("Get VCF infos\n") }
   close(con)
   INFOS_SPLIT<-strsplit(VCF$INFO,";")
-  names(INFOS_SPLIT)<-VCF$ID
+  names(INFOS_SPLIT)<-SNPS
   for(SNP in names(INFOS_SPLIT)){
     lapply(INFOS_SPLIT[[SNP]],function(x){
       TAG<-gsub("=.*$","",x)
